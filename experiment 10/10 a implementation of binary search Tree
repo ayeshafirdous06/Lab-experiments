@@ -1,0 +1,146 @@
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, root, data):
+        if root is None:
+            return Node(data)
+
+        if data < root.data:
+            root.left = self.insert(root.left, data)
+
+        elif data > root.data:
+            root.right = self.insert(root.right, data)
+
+        else:
+            print("Duplicate values are not allowed")
+
+        return root
+
+    def search(self, root, key):
+        if root is None:
+            return False
+
+        if root.data == key:
+            return True
+
+        if key < root.data:
+            return self.search(root.left, key)
+
+        return self.search(root.right, key)
+
+    def find_min(self, root):
+        while root.left:
+            root = root.left
+
+        return root
+
+    def delete(self, root, key):
+        if root is None:
+            return None
+
+        if key < root.data:
+            root.left = self.delete(root.left, key)
+
+        elif key > root.data:
+            root.right = self.delete(root.right, key)
+
+        else:
+            # Node has no left child
+            if root.left is None:
+                return root.right
+
+            # Node has no right child
+            if root.right is None:
+                return root.left
+
+            # Node has two children
+            temp = self.find_min(root.right)
+            root.data = temp.data
+            root.right = self.delete(root.right, temp.data)
+
+        return root
+
+    def inorder(self, root):
+        if root:
+            self.inorder(root.left)
+            print(root.data, end=" ")
+            self.inorder(root.right)
+
+    def preorder(self, root):
+        if root:
+            print(root.data, end=" ")
+            self.preorder(root.left)
+            self.preorder(root.right)
+
+    def postorder(self, root):
+        if root:
+            self.postorder(root.left)
+            self.postorder(root.right)
+            print(root.data, end=" ")
+
+
+tree = BST()
+
+while True:
+    print("\n--- BINARY SEARCH TREE ---")
+    print("1. INSERT")
+    print("2. DELETE")
+    print("3. SEARCH")
+    print("4. INORDER")
+    print("5. PREORDER")
+    print("6. POSTORDER")
+    print("7. EXIT")
+
+    ch = int(input("Enter choice: "))
+
+    if ch == 1:
+        x = int(input("Enter value: "))
+        tree.root = tree.insert(tree.root, x)
+        print("Node inserted")
+
+    elif ch == 2:
+        x = int(input("Enter value to delete: "))
+
+        if tree.search(tree.root, x):
+            tree.root = tree.delete(tree.root, x)
+            print("Node deleted")
+        else:
+            print("Value not found")
+
+    elif ch == 3:
+        x = int(input("Enter value to search: "))
+
+        if tree.search(tree.root, x):
+            print("Element Found")
+        else:
+            print("Element Not Found")
+
+    elif ch == 4:
+        print("Inorder Traversal:", end=" ")
+        tree.inorder(tree.root)
+        print()
+
+    elif ch == 5:
+        print("Preorder Traversal:", end=" ")
+        tree.preorder(tree.root)
+        print()
+
+    elif ch == 6:
+        print("Postorder Traversal:", end=" ")
+        tree.postorder(tree.root)
+        print()
+
+    elif ch == 7:
+        break
+
+    else:
+        print("Invalid Choice")
